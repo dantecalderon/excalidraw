@@ -6,6 +6,12 @@ const TerserPlugin = require("terser-webpack-plugin");
 const BundleAnalyzerPlugin =
   require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
+/**
+ * Note:
+ * Build: excalidraw/src/packages/excalidraw [master]$ yarn build:umd
+ * After build add this line to the top of the file(it works on chrome, firefix and opera):
+ * window.EXCALIDRAW_ASSET_PATH = chrome.runtime.getURL('/assets/');
+ */
 module.exports = {
   mode: "production",
   entry: {
@@ -16,9 +22,10 @@ module.exports = {
     library: "ExcalidrawLib",
     libraryTarget: "umd",
     filename: "[name].js",
-    chunkFilename: "excalidraw-assets/[name]-[contenthash].js",
+    // chunkFilename: "excalidraw-assets/[name]-[contenthash].js",
     assetModuleFilename: "excalidraw-assets/[name][ext]",
     publicPath: "",
+    chunkLoading: false,
   },
   resolve: {
     extensions: [".js", ".ts", ".tsx", ".css", ".scss"],
@@ -86,6 +93,12 @@ module.exports = {
     minimizer: [
       new TerserPlugin({
         test: /\.js($|\?)/i,
+        terserOptions: {
+          ecma: 6,
+          output: {
+            ascii_only: true,
+          },
+        },
       }),
     ],
     splitChunks: {
