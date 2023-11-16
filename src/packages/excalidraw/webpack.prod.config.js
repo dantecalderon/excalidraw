@@ -12,7 +12,8 @@ const BundleAnalyzerPlugin =
  * After build add this line to the top of the file(it works on chrome, firefix and opera):
  * window.EXCALIDRAW_ASSET_PATH = chrome.runtime.getURL('/assets/');
  *
- * To build use: yarn build:umd
+ * To build use(this also addas the assets path):
+yarn build:umd && sed -i '.bak' "1s/^/window.EXCALIDRAW_ASSET_PATH = chrome.runtime.getURL('\/assets\/');\n/g" dist/excalidraw.production.min.js
  */
 
 module.exports = {
