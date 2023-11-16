@@ -6,6 +6,16 @@ const TerserPlugin = require("terser-webpack-plugin");
 const BundleAnalyzerPlugin =
   require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
+/**
+ * Note:
+ * Build: excalidraw/src/packages/excalidraw [master]$ yarn build:umd
+ * After build add this line to the top of the file(it works on chrome, firefix and opera):
+ * window.EXCALIDRAW_ASSET_PATH = chrome.runtime.getURL('/assets/');
+ *
+ * To build use(this also addas the assets path):
+yarn build:umd && sed -i '.bak' "1s/^/window.EXCALIDRAW_ASSET_PATH = chrome.runtime.getURL('\/assets\/');\n/g" dist/excalidraw.production.min.js
+ */
+
 module.exports = {
   mode: "production",
   entry: {
@@ -16,9 +26,11 @@ module.exports = {
     library: "ExcalidrawLib",
     libraryTarget: "umd",
     filename: "[name].js",
-    chunkFilename: "excalidraw-assets/[name]-[contenthash].js",
+    // Avoid chunks, it generates errors on loading in chrome extension.
+    // chunkFilename: "excalidraw-assets/[name]-[contenthash].js",
     assetModuleFilename: "excalidraw-assets/[name][ext]",
     publicPath: "",
+    chunkLoading: false,
   },
   resolve: {
     extensions: [".js", ".ts", ".tsx", ".css", ".scss"],
@@ -94,6 +106,13 @@ module.exports = {
     minimizer: [
       new TerserPlugin({
         test: /\.js($|\?)/i,
+        // Avoid "invalid UTF-8 script" like errors on chrome extension
+        terserOptions: {
+          ecma: 6,
+          output: {
+            ascii_only: true,
+          },
+        },
       }),
     ],
     splitChunks: {
