@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 
 import { DEFAULT_UI_OPTIONS, isShallowEqual } from "@excalidraw/common";
 
+import { exportToBlob } from "@excalidraw/utils/export";
+
 import App from "./components/App";
 import { InitializeApp } from "./components/InitializeApp";
 import Footer from "./components/footer/FooterCenter";
@@ -244,6 +246,10 @@ export {
   exportToSvg,
   exportToClipboard,
 } from "@excalidraw/utils/export";
+
+(window as any).ExcalidrawLib = {
+  exportToBlob,
+};
 
 export { serializeAsJSON, serializeLibraryAsJSON } from "./data/json";
 export {
