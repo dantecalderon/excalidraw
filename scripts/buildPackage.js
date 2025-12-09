@@ -73,6 +73,7 @@ const getConfig = (outdir) => ({
   splitting: false, // Disable code splitting to generate a single file
   format: "iife", // Expose as browser global similar to webpack umd
   globalName: "ExcalidrawLib",
+  platform: "browser", // Ensure browser platform for proper bundling
   jsx: "automatic", // Use automatic JSX transform (react-jsx) and bundle jsx-runtime
   plugins: [sassPlugin(), asciiOnlyPlugin(outdir)],
   target: "es2020",
